@@ -1,7 +1,7 @@
 import socket, threading
 from datetime import datetime as dt
 
-class COLOUR:
+class Colour:
     white = '\033[1;37;40m'
     green = '\033[1;32;40m'
     yellow = '\033[1;33;40m'
@@ -13,19 +13,19 @@ class COLOUR:
     # If you want to disable colours, uncomment the following line:
     # white, green, yellow, red, cyan, grey, purple = '', '', '', '', '', '', ''
 
-class STATUS:
-    server = str(f'{COLOUR.grey}[{COLOUR.green}SERVER{COLOUR.grey}]{COLOUR.white}')
-    info = f'{COLOUR.grey}[{COLOUR.cyan}INFO{COLOUR.grey}]{COLOUR.white}'
-    req = f'{COLOUR.grey}[{COLOUR.purple}REQ{COLOUR.grey}]{COLOUR.purple}'
-    connect = f'{COLOUR.grey}[{COLOUR.green}+{COLOUR.grey}]{COLOUR.white}'
-    disconnect = f'{COLOUR.grey}[{COLOUR.red}-{COLOUR.grey}]{COLOUR.white}'
-    error = f'{COLOUR.grey}[{COLOUR.red}ERROR{COLOUR.grey}]{COLOUR.white}'
+class Status:
+    server = str(f'{Colour.grey}[{Colour.green}SERVER{Colour.grey}]{Colour.white}')
+    info = f'{Colour.grey}[{Colour.cyan}INFO{Colour.grey}]{Colour.white}'
+    req = f'{Colour.grey}[{Colour.purple}REQ{Colour.grey}]{Colour.purple}'
+    connect = f'{Colour.grey}[{Colour.green}+{Colour.grey}]{Colour.white}'
+    disconnect = f'{Colour.grey}[{Colour.red}-{Colour.grey}]{Colour.white}'
+    error = f'{Colour.grey}[{Colour.red}ERROR{Colour.grey}]{Colour.white}'
 
 def getTime():
-    return str(f'{COLOUR.grey}[{COLOUR.yellow}{dt.now().strftime("%H:%M:%S")}{COLOUR.grey}]{COLOUR.white}')
+    return str(f'{Colour.grey}[{Colour.yellow}{dt.now().strftime("%H:%M:%S")}{Colour.grey}]{Colour.white}')
 
 def handleAddress(address):
-    return f'{COLOUR.grey}[{COLOUR.red}{str(address)[14:-1]}{COLOUR.grey}]{COLOUR.white}'
+    return f'{Colour.grey}[{Colour.red}{str(address)[14:-1]}{Colour.grey}]{Colour.white}'
 
 def broadcast(message):
     for client in clients:
@@ -40,22 +40,22 @@ def disconnect(client):
             clients.remove(client)
             client.close()
             nickname = nicknames[index]
-            print(f' {getTime()} {STATUS.disconnect} {nickname}')
-            broadcast(f' {getTime()} {STATUS.server} {nickname} disconnected from IRC.'.encode('ascii'))
+            print(f' {getTime()} {Status.disconnect} {nickname}')
+            broadcast(f' {getTime()} {Status.server} {nickname} disconnected from IRC.'.encode('ascii'))
             nicknames.remove(nickname)
             break
 
 def connect():
     while True:
         client, address = server.accept()
-        print(f' {getTime()} {STATUS.connect} {handleAddress(address)}')
-        print(f" {getTime()} {STATUS.req} {handleAddress(address)} Nickname: ...")
+        print(f' {getTime()} {Status.connect} {handleAddress(address)}')
+        print(f" {getTime()} {Status.req} {handleAddress(address)} Nickname: ...")
         client.send(f'nickname: {handleAddress(address)}'.encode('ascii'))
         nickname = client.recv(1024).decode('ascii')
         nicknames.append(nickname)
         clients.append(client)
-        print(f' {getTime()} {STATUS.info} {handleAddress(address)} Nickname: {nickname}.')
-        broadcast(f' {getTime()} {STATUS.server} {nickname} connected to IRC.'.encode('ascii'))
+        print(f' {getTime()} {Status.info} {handleAddress(address)} Nickname: {nickname}.')
+        broadcast(f' {getTime()} {Status.server} {nickname} connected to IRC.'.encode('ascii'))
         clientHandler = threading.Thread(target=disconnect, args=(client,))
         clientHandler.start()
 
@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
         clients, nicknames = [], []
 
-        print(f' {getTime()} {STATUS.server} Started successfully.')
+        print(f' {getTime()} {Status.server} Started successfully.')
         connect()
     except Exception as e:
-        print(f' {getTime()} {STATUS.error} {COLOUR.red}Server failed to start.{COLOUR.white}')
+        print(f' {getTime()} {Status.error} {Colour.red}Server failed to start.{Colour.white}')

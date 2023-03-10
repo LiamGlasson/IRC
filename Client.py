@@ -1,7 +1,7 @@
 import socket, threading
 from datetime import datetime as dt
 
-class COLOUR:
+class Colour:
     white = '\033[1;37;40m'
     green = '\033[1;32;40m'
     yellow = '\033[1;33;40m'
@@ -13,16 +13,16 @@ class COLOUR:
     # If you want to disable colours, uncomment the following line:
     # white, green, yellow, red, cyan, grey, purple = '', '', '', '', '', '', ''
 
-class STATUS:
-    local = f'{COLOUR.grey}[{COLOUR.cyan}LOCAL{COLOUR.grey}]{COLOUR.white}'
-    server = f'{COLOUR.grey}[{COLOUR.green}SERVER{COLOUR.grey}]{COLOUR.white}'
-    error = f'{COLOUR.grey}[{COLOUR.red}ERROR{COLOUR.grey}]{COLOUR.white}'
+class Status:
+    local = f'{Colour.grey}[{Colour.cyan}LOCAL{Colour.grey}]{Colour.white}'
+    server = f'{Colour.grey}[{Colour.green}SERVER{Colour.grey}]{Colour.white}'
+    error = f'{Colour.grey}[{Colour.red}ERROR{Colour.grey}]{Colour.white}'
 
 def getTime():
-    return f'{COLOUR.grey}[{COLOUR.yellow}{dt.now().strftime("%H:%M:%S")}{COLOUR.grey}]{COLOUR.white}'
+    return f'{Colour.grey}[{Colour.yellow}{dt.now().strftime("%H:%M:%S")}{Colour.grey}]{Colour.white}'
 
 def handleName(client):
-    return f'nickname: {COLOUR.grey}[{COLOUR.red}{str(client).split(", ")[5][:-1]}{COLOUR.grey}]{COLOUR.white}'
+    return f'nickname: {Colour.grey}[{Colour.red}{str(client).split(", ")[5][:-1]}{Colour.grey}]{Colour.white}'
 
 def receive():
     while True:
@@ -33,20 +33,20 @@ def receive():
             else:
                 print(message) 
         except:
-            print(f' {getTime()} {STATUS.error} {COLOUR.red}Server Closed.{COLOUR.white}')
+            print(f' {getTime()} {Status.error} {Colour.red}Server Closed.{Colour.white}')
             client.close()
             break
 
 def send():
     while True:
         content = input("")
-        message = f' {getTime()} {COLOUR.grey}[{COLOUR.green}{nickname}{COLOUR.grey}] {COLOUR.white}{content}'
+        message = f' {getTime()} {Colour.grey}[{Colour.green}{nickname}{Colour.grey}] {Colour.white}{content}'
         client.send(message.encode('ascii'))
 
 if __name__ == "__main__":
     try:
-        nickname = input(f' {getTime()} {STATUS.local} Enter Nickname{COLOUR.grey}> {COLOUR.yellow}')
-        print(f' {getTime()} {STATUS.local} Attempting to connect...\n')
+        nickname = input(f' {getTime()} {Status.local} Enter Nickname{Colour.grey}> {Colour.yellow}')
+        print(f' {getTime()} {Status.local} Attempting to connect...\n')
 
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client.connect(('localhost', 8080))
@@ -57,4 +57,4 @@ if __name__ == "__main__":
         sendMessages = threading.Thread(target=send)
         sendMessages.start()
     except:
-        print(f' {getTime()} {STATUS.error} {COLOUR.red}Invalid host and/or port.{COLOUR.white}')
+        print(f' {getTime()} {Status.error} {Colour.red}Invalid host and/or port.{Colour.white}')
